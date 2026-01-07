@@ -55,10 +55,46 @@ static int8_t setNextElevatorStop(struct building_s building)
 			passengerCount++;
 		}
 	}
-	printf("Passenger Count: %d\n", passengerCount);
-	delay(1000);
 
-	return 1;
+	// determine nearest floor with passengers to pick up
+
+	int passengersHere[BUILDING_HEIGHT];
+	int floorDistances[BUILDING_HEIGHT];
+	int nearestFloor_pickup = -1; // nearest floor with passengers to pick up
+
+	for (int i = 0; i < BUILDING_HEIGHT; i++)
+	{
+
+		 passengersHere[i] = building.floors[i].departures[0] != -1 || building.floors[i].departures[1] != -1;
+		 if (passengersHere[i])
+		 {
+		 	floorDistances[i] = abs(building.elevator.currentFloor - i);
+		 }
+		 else
+		 {
+		 	floorDistances[i] = 100; // large number
+		 }
+
+		 // min of floor distances
+		 if (i == 0){
+			nearestFloor_pickup = i;
+		 }
+		 else if (floorDistances[i] < floorDistances[nearestFloor_pickup])
+		 {
+		 	nearestFloor_pickup = i;
+		 }
+
+	}
+
+	int nextFloor = -1;
+	if (passengerCount == 0){
+		nextFloor = nearestFloor_pickup;
+	}
+	else {
+		nextFloor = 0;
+	}
+
+	return nextFloor;
 }
 
 
