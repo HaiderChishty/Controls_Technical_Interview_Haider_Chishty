@@ -46,42 +46,41 @@ static void delay(int16_t ms);
 //Note: The output should be a number between 0 and (BUILDING_HEIGHT-1), inclusive
 static int8_t setNextElevatorStop(struct building_s building)
 {
-	// calculate num passengers
-	int nearestFloor_dropoff = -1; // nearest floor with passengers to drop off
-	int passengerCount = 0;
-	for (int i = 0; i < ELEVATOR_MAX_CAPACITY; i++)
+	// loop through current passengers
+	int nearestFloor_dropoff = -1; // nearest floor that a current passenger needs to get off
+	int passengerCount = 0; // passenger count
+
+	for (int i = 0; i < ELEVATOR_MAX_CAPACITY; i++) // loop through elevator slots
 	{
-		if (building.elevator.passengers[i] != -1)
+		if (building.elevator.passengers[i] != -1) // if there's a passenger in this slot
 		{
 			passengerCount++;
 			
-			// determine nearest floor to drop passengers off
-
-			if (i == 0){
+			// tracking nearest dropoff floor
+			if (passengerCount == 1){ // only passenger so far - default as nearest dropoff floor
 				nearestFloor_dropoff = building.elevator.passengers[i];
 			}
-			else if (abs(building.elevator.currentFloor - building.elevator.passengers[i]) < abs(building.elevator.currentFloor - nearestFloor_dropoff))
+			else if (abs(building.elevator.currentFloor - building.elevator.passengers[i]) < abs(building.elevator.currentFloor - nearestFloor_dropoff)) 
 			{
-				nearestFloor_dropoff = building.elevator.passengers[i];
+				nearestFloor_dropoff = building.elevator.passengers[i]; // replace as nearest dropoff floor if nearer than previous passenger
 			}
 		}
 	}
 
+	int passengersHere[BUILDING_HEIGHT]; // bool array - are there passengers to pick up on this floor
+	int floorDistances[BUILDING_HEIGHT]; // distance from current floor to each floor
 
-	int passengersHere[BUILDING_HEIGHT];
-	int floorDistances[BUILDING_HEIGHT];
 	int nearestFloor_pickup = -1; // nearest floor with passengers to pick up
-	int emptyFLoorCount = 0; // if = 5, no more passengers to pick up
+	int emptyFLoorCount = 0; // if == 5, no more passengers to pick up
 
-	for (int i = 0; i < BUILDING_HEIGHT; i++)
+	for (int i = 0; i < BUILDING_HEIGHT; i++) // loop through floors
 	{
-		
-		// determine nearest floor with passengers to pick up
-
+		// passengers on current floor? check both departure slots
 		 passengersHere[i] = building.floors[i].departures[0] != -1 || building.floors[i].departures[1] != -1;
+
 		 if (passengersHere[i])
 		 {
-		 	floorDistances[i] = abs(building.elevator.currentFloor - i);
+		 	floorDistances[i] = abs(building.elevator.currentFloor - i); // calc floor distance from elevator
 		 }
 		 else
 		 {
@@ -91,11 +90,11 @@ static int8_t setNextElevatorStop(struct building_s building)
 
 		 // min of floor distances
 		 if (i == 0){
-			nearestFloor_pickup = i;
+			nearestFloor_pickup = i; // 0th floor as default minimum
 		 }
 		 else if (floorDistances[i] < floorDistances[nearestFloor_pickup])
 		 {
-		 	nearestFloor_pickup = i;
+		 	nearestFloor_pickup = i; // replace as nearest pickup floor if nearer than previous
 		 }
 	}
 	if (emptyFLoorCount == BUILDING_HEIGHT){
@@ -103,23 +102,33 @@ static int8_t setNextElevatorStop(struct building_s building)
 	}
 
 	int nextFloor = -1;
-	if (passengerCount == 0){
+	// decision logic based on passenger count (0, max capacity, other)
+
+	if (passengerCount == 0){ // elevator empty: go to nearest pickup floor
 		nextFloor = nearestFloor_pickup;
+
+		printf("No passengers. Going to pick up at floor %d\n", nextFloor);
 	}
-	else if (passengerCount == ELEVATOR_MAX_CAPACITY) {
+	else if (passengerCount == ELEVATOR_MAX_CAPACITY) { // at max capacity: go to nearest dropoff floor
 		nextFloor = nearestFloor_dropoff;
+
+		printf("At capacity. Going to drop off at floor %d\n", nextFloor);
 	}
-	else {
+	else { // ordered decision if 1 or 2 passengers: nearest pickup first; if no more passengers, then drop off
+
 		if (nearestFloor_pickup >= 0) {
 			nextFloor = nearestFloor_pickup;
+
+			printf("Picking up from floor %d\n", nextFloor);
 		}
 		else {
 			nextFloor = nearestFloor_dropoff;
+
+			printf("Dropping off at floor %d\n", nextFloor);
 		}
 	}
-	printf("nearestFloor_pickup: %d\n", nearestFloor_pickup);
-	printf("nearestFloor_dropoff: %d\n", nearestFloor_dropoff);
-	delay(2000);
+
+	delay(5000); // delaying a little so I can see my print statements
 
 	return nextFloor;
 }
