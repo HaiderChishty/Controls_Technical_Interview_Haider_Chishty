@@ -47,23 +47,36 @@ static void delay(int16_t ms);
 static int8_t setNextElevatorStop(struct building_s building)
 {
 	// calculate num passengers
+	int nearestFloor_dropoff = -1; // nearest floor with passengers to drop off
 	int passengerCount = 0;
 	for (int i = 0; i < ELEVATOR_MAX_CAPACITY; i++)
 	{
 		if (building.elevator.passengers[i] != -1)
 		{
 			passengerCount++;
+			
+			// determine nearest floor to drop passengers off
+
+			if (i == 0){
+				nearestFloor_dropoff = building.elevator.passengers[i];
+			}
+			else if (abs(building.elevator.currentFloor - building.elevator.passengers[i]) < abs(building.elevator.currentFloor - nearestFloor_dropoff))
+			{
+				nearestFloor_dropoff = building.elevator.passengers[i];
+			}
 		}
 	}
 
-	// determine nearest floor with passengers to pick up
 
 	int passengersHere[BUILDING_HEIGHT];
 	int floorDistances[BUILDING_HEIGHT];
 	int nearestFloor_pickup = -1; // nearest floor with passengers to pick up
+	int emptyFLoorCount = 0; // if = 5, no more passengers to pick up
 
 	for (int i = 0; i < BUILDING_HEIGHT; i++)
 	{
+		
+		// determine nearest floor with passengers to pick up
 
 		 passengersHere[i] = building.floors[i].departures[0] != -1 || building.floors[i].departures[1] != -1;
 		 if (passengersHere[i])
@@ -73,6 +86,7 @@ static int8_t setNextElevatorStop(struct building_s building)
 		 else
 		 {
 		 	floorDistances[i] = 100; // large number
+			emptyFLoorCount++;
 		 }
 
 		 // min of floor distances
@@ -83,16 +97,29 @@ static int8_t setNextElevatorStop(struct building_s building)
 		 {
 		 	nearestFloor_pickup = i;
 		 }
-
+	}
+	if (emptyFLoorCount == BUILDING_HEIGHT){
+		nearestFloor_pickup = -1; // no more passengers to pick up
 	}
 
 	int nextFloor = -1;
 	if (passengerCount == 0){
 		nextFloor = nearestFloor_pickup;
 	}
-	else {
-		nextFloor = 0;
+	else if (passengerCount == ELEVATOR_MAX_CAPACITY) {
+		nextFloor = nearestFloor_dropoff;
 	}
+	else {
+		if (nearestFloor_pickup >= 0) {
+			nextFloor = nearestFloor_pickup;
+		}
+		else {
+			nextFloor = nearestFloor_dropoff;
+		}
+	}
+	printf("nearestFloor_pickup: %d\n", nearestFloor_pickup);
+	printf("nearestFloor_dropoff: %d\n", nearestFloor_dropoff);
+	delay(2000);
 
 	return nextFloor;
 }
