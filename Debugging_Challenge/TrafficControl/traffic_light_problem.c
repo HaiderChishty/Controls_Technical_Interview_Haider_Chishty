@@ -69,7 +69,7 @@ void main(void)
 		system("clear");
 		drawIntersection(myIntersection);
 		fflush(stdout);
-		delay(500);
+		delay(1000);
 
 		//Check to make sure no cars have crashed
 		if(checkForCrashes() == 1)
@@ -130,7 +130,6 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 	
 
 	t++;
-
 	switch(currentColorEnum)
 	{
 		case RED:
@@ -139,10 +138,11 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 				newColor = "G";
 				t = 0;
 			}
+			
 			break;
 
 		case GREEN:
-			if((intersection.eastboundCars.carsWaitingAtIntersection + intersection.westboundCars.carsWaitingAtIntersection < intersection.northboundCars.carsWaitingAtIntersection + intersection.southboundCars.carsWaitingAtIntersection) || t > 10)
+			if((intersection.eastboundCars.carsWaitingAtIntersection + intersection.westboundCars.carsWaitingAtIntersection < intersection.northboundCars.carsWaitingAtIntersection + intersection.southboundCars.carsWaitingAtIntersection && t >= 5) || (t >= 10))
 			{
 				newColor = "Y";
 				t = 0;
@@ -162,7 +162,6 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 			t = 0;	
 			break;
 	}
-
 	return newColor;
 }
 
@@ -191,15 +190,20 @@ static char * setVerticalTrafficLight(struct intersection_s intersection)
 	switch(currentColorEnum)
 	{
 		case RED:
-			if((intersection.eastboundCars.carsWaitingAtIntersection + intersection.westboundCars.carsWaitingAtIntersection < intersection.northboundCars.carsWaitingAtIntersection + intersection.southboundCars.carsWaitingAtIntersection) && (strcmp(intersection.horizantalTrafficColor,"R") == 0))
+			// printf("Current V Light is %s, Current H light %s\n", currentColor, intersection.horizantalTrafficColor);
+			// printf("%d V cars vs. %d H cars waiting\n", intersection.northboundCars.carsWaitingAtIntersection + intersection.southboundCars.carsWaitingAtIntersection, intersection.westboundCars.carsWaitingAtIntersection + intersection.eastboundCars.carsWaitingAtIntersection);
+
+			if((intersection.eastboundCars.carsWaitingAtIntersection + intersection.westboundCars.carsWaitingAtIntersection <= intersection.northboundCars.carsWaitingAtIntersection + intersection.southboundCars.carsWaitingAtIntersection) && (strcmp(intersection.horizantalTrafficColor,"R") == 0))
 			{
 				newColor = "G";
 				t = 0;
+				// printf("Switching");
 			}
+			// delay(5000);
 			break;
 
 		case GREEN:
-			if((intersection.eastboundCars.carsWaitingAtIntersection + intersection.westboundCars.carsWaitingAtIntersection >= intersection.northboundCars.carsWaitingAtIntersection + intersection.southboundCars.carsWaitingAtIntersection) || t > 10)
+			if ((intersection.eastboundCars.carsWaitingAtIntersection + intersection.westboundCars.carsWaitingAtIntersection > intersection.northboundCars.carsWaitingAtIntersection + intersection.southboundCars.carsWaitingAtIntersection && t > 5) || (t >= 10))
 			{
 				newColor = "Y";
 				t = 0;
@@ -264,9 +268,9 @@ static void advanceLane(char * trafficColor, struct lane_of_cars_s * lane)
 static void drawIntersection(struct intersection_s intersection)
 {
 	drawUpperVerticalRoad(intersection.verticalTrafficColor,intersection.northboundCars,intersection.southboundCars);
-	drawWestboundLane(intersection.horizantalTrafficColor,intersection.westboundCars);
+	drawWestboundLane(intersection.horizantalTrafficColor,intersection.westboundCars); // horizontal displayed Lights don't correspond to correct intersection.horizantalTrafficColor - visual is delayed one frame - not a problem with vertical
 	printf("----------          ---------- \n");
-	drawEastboundLane(intersection.horizantalTrafficColor,intersection.eastboundCars);
+	drawEastboundLane(intersection.horizantalTrafficColor,intersection.eastboundCars); // smae as above comment
 	drawLowerVerticalRoad(intersection.verticalTrafficColor,intersection.northboundCars,intersection.southboundCars);
 }
 
