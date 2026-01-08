@@ -114,8 +114,8 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 	char * currentColor = intersection.horizantalTrafficColor;
 	char * newColor = currentColor;
 	traffic_light_colors_t currentColorEnum = -1;
-	printf("%s\n",currentColor);
-	delay(1000);
+	// printf("%s\n",currentColor);
+	// delay(1000);
 
 	if(strcmp(currentColor,"R") == 0)
 	{
@@ -431,7 +431,7 @@ static void delay(int16_t ms)
 static int8_t checkForCrashes(void)
 {
 	int8_t isHorizantalCarInIntersection = (myIntersection.westboundCars.carsInIntersection | myIntersection.eastboundCars.carsInIntersection);
-	int8_t isVerticalCarInIntersection = (myIntersection.westboundCars.carsInIntersection | myIntersection.eastboundCars.carsInIntersection);
+	int8_t isVerticalCarInIntersection = (myIntersection.northboundCars.carsInIntersection | myIntersection.southboundCars.carsInIntersection);
 
 	if(isHorizantalCarInIntersection && isVerticalCarInIntersection){return 1;}
 	return 0;
