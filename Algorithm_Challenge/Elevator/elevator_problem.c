@@ -76,9 +76,9 @@ static int8_t setNextElevatorStop(struct building_s building)
 
 		 if (passengersHere[i])
 		 {
-			if ((nearestFloor_pickup == -1) || abs(currentFloor - i) < abs(currentFloor - nearestFloor_pickup))
+			if ((nearestFloor_pickup == -1) || abs(currentFloor - i) < abs(currentFloor - nearestFloor_pickup)) // denote as nearest floor, updated if closer
 			{
-		 		nearestFloor_pickup = i; // calc floor distance from elevator
+		 		nearestFloor_pickup = i; 
 			}
 		 }
 	}
