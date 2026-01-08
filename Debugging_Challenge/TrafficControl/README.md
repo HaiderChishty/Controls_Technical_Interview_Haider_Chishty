@@ -39,9 +39,9 @@ Candidate Action Items:
 - Make any other improvements to the code as you see fit
 - Answer the following questions:
   - What would you tell the junior engineer about ways that they could improve their code in the future? (1-3 sentences)
-    - ADD YOUR ANSWER HERE
+    - Most of the "errors" were more honest mistakes that happen when dealing with a lot of code, not revisiting (e.g. collision detection using horizontal lanes twice, if statements being accedentally nested, no breaks in switch). I find that these types of errors are unavoidable, but the solution to mitigating them is to not place yourself in this type of position via the structure of your code - as I'll expand on below, a coding structure that uses two nearly identical functions (i.e. horizontal vs vertical lights) invites twice as many areas for error. Beyond the error fixes, I modified timing constraints from G -> Y to avoid erratic behavior (min 5 secs before switch).
   - How else would you change this code to make it better so you can build on it in the future?(1-10 sentences).
-    - ADD YOUR ANSWER HERE
+    - As mentioned above, I would not include two functions for Vertical vs. Horizontal lights. The state machine needs to switch/be in charge of both lights as the same time to 1: avoid more errors and 2: be more stucturally sound - the lights work together/are dependendent on eachother, so this should be implimented in this code as well. I.e., perhaps the same logic step switches one from R->G at the same point the other switches Y->R (or at some fixed time after - the critical point here is that the same "state"/subsection of the code should cover both these changes as they're inherently related). Other major room for improvement relates to teh G->Y logic as a whole: I just enforced a min switch time, but implimenting logic that allows for switching if no one is in the lane would be a simple way to reduce wait times.
 
 Don't forget; we are interested in both your solution and your thought process.
 
