@@ -69,7 +69,7 @@ void main(void)
 		system("clear");
 		drawIntersection(myIntersection);
 		fflush(stdout);
-		delay(1000);
+		delay(500);
 
 		//Check to make sure no cars have crashed
 		if(checkForCrashes() == 1)
@@ -114,8 +114,6 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 	char * currentColor = intersection.horizantalTrafficColor;
 	char * newColor = currentColor;
 	traffic_light_colors_t currentColorEnum = -1;
-	// printf("%s\n",currentColor);
-	// delay(1000);
 
 	if(strcmp(currentColor,"R") == 0)
 	{
@@ -132,6 +130,7 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 	
 
 	t++;
+
 	switch(currentColorEnum)
 	{
 		case RED:
@@ -151,7 +150,7 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 			break;
 
 		case YELLOW:
-			if(t > 1)
+			if(t >= 1)
 			{
 				newColor = "R";
 				t = 0;
@@ -188,6 +187,7 @@ static char * setVerticalTrafficLight(struct intersection_s intersection)
 	}
 
 	t++;
+
 	switch(currentColorEnum)
 	{
 		case RED:
@@ -207,7 +207,7 @@ static char * setVerticalTrafficLight(struct intersection_s intersection)
 			break;
 
 		case YELLOW:
-			if(t > 1)
+			if(t >= 1)
 			{
 				newColor = "R";
 				t = 0;
