@@ -124,12 +124,12 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 	else if(strcmp(currentColor,"G") == 0)
 	{
 		currentColorEnum = GREEN;
-
-		if(strcmp(currentColor,"Y") == 0)
-		{
-			currentColorEnum = YELLOW;
-		}
 	}
+	else if(strcmp(currentColor,"Y") == 0)
+	{
+		currentColorEnum = YELLOW;
+	}
+	
 
 	t++;
 	switch(currentColorEnum)
@@ -177,11 +177,10 @@ static char * setVerticalTrafficLight(struct intersection_s intersection)
 	if(strcmp(currentColor,"R") == 0)
 	{
 		currentColorEnum = RED;
-
-		if(strcmp(currentColor,"G") == 0)
-		{	
-			currentColorEnum = GREEN;
-		}
+	}
+	else if(strcmp(currentColor,"G") == 0)
+	{	
+		currentColorEnum = GREEN;
 	}
 	else if(strcmp(currentColor,"Y") == 0)
 	{
