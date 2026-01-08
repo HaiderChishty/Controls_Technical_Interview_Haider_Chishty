@@ -114,6 +114,8 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 	char * currentColor = intersection.horizantalTrafficColor;
 	char * newColor = currentColor;
 	traffic_light_colors_t currentColorEnum = -1;
+	printf("%s\n",currentColor);
+	delay(1000);
 
 	if(strcmp(currentColor,"R") == 0)
 	{
@@ -138,6 +140,7 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 				newColor = "G";
 				t = 0;
 			}
+			break;
 
 		case GREEN:
 			if((intersection.eastboundCars.carsWaitingAtIntersection + intersection.westboundCars.carsWaitingAtIntersection < intersection.northboundCars.carsWaitingAtIntersection + intersection.southboundCars.carsWaitingAtIntersection) || t > 10)
@@ -145,6 +148,7 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 				newColor = "Y";
 				t = 0;
 			}
+			break;
 
 		case YELLOW:
 			if(t > 1)
@@ -152,10 +156,12 @@ static char * setHorizantalTrafficLight(struct intersection_s intersection)
 				newColor = "R";
 				t = 0;
 			}
+			break;
 
 		default:
 			newColor = "R";
 			t = 0;	
+			break;
 	}
 
 	return newColor;
