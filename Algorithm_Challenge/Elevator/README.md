@@ -39,7 +39,7 @@ Candidate Action Items:
   above function, please do not edit the code that's already in the files, unless you are extremely certain that 
   there's a bug in the code.
 - Briefly describe your implementation (1-3 sentences).
-  - Overall (inefficient heuristic): act based on the extremes - seemed like a logical starting point with hopefully room to optimize later. If elevator is empty, find and pickup at the nearest floor with departures; if at capacity, drop someone off as quickly as possible. Future iterations (time permitting) will work on the inbetweens/"on-the-way" drop-offs.
+  - Began with a (perhaps inefficient) heuristic of acting based on the extremes - this seemed like a logical starting point that shouldn't conflict with future refinements: if the elevator is empty find and pickup from the nearest floor with departures; if at capacity, drop someone off as quickly as possible. For the mid capacity scenarios, if there still are people to pick up, then the elevator picks up or drops off depending on which destination floor is closer.
 
 Don't forget; we are interested in both your solution and your thought process.
 
