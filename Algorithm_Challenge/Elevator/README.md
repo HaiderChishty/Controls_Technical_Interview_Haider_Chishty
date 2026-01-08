@@ -39,7 +39,7 @@ Candidate Action Items:
   above function, please do not edit the code that's already in the files, unless you are extremely certain that 
   there's a bug in the code.
 - Briefly describe your implementation (1-3 sentences).
-  - ADD YOUR ANSWER HERE
+  - Overall (inefficient heuristic): act based on the extremes - seemed like a logical starting point with hopefully room to optimize later. If elevator is empty, find and pickup at the nearest floor with departures; if at capacity, drop someone off as quickly as possible. Future iterations (time permitting) will work on the inbetweens/"on-the-way" drop-offs.
 
 Don't forget; we are interested in both your solution and your thought process.
 
